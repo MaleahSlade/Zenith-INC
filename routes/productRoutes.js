@@ -15,6 +15,32 @@ res.status(500).json({ message: 'Server error', error: error.message });
 }
 });
 
+//Filter Feature
+router.get('/', async (req, res) => {
+try {
+const { category, minPrice, maxPrice } = req.query;
+const filter = {};
+if (category) filter.category = category;
+if (minPrice || maxPrice) {
+filter.price = {};
+if (minPrice) filter.price.$gte = Number(minPrice); // >=
+if (maxPrice) filter.price.$lte = Number(maxPrice); // <=
+}
+const products = await Product.find(filter);
+res.json(products);
+} catch (error) {
+res.status(500).json({ message: 'Server error', error: error.message });
+}
+});
+
+
+
+
+
+
+
+
+
 //GET
 router.get('/:id', async (req, res) => {
 try {
